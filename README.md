@@ -15,16 +15,28 @@ The GUI offers the following features:
 
 ## Setup
 
+### Installation
+
 There is a `setup.py` for automated installation. To install `pysipgate` simply
 call:
 
     ./setup.py install --user
+
+### Configuration
 
 The GUI is configured in the file `~/.pysipgate`. It should look like this:
 
     [account]
     user: thammi
     password: 123456
+
+If you want to define a sender phone number for SMS sending, add following section to the configuration file:
+    
+    [sms]
+    sender: 49987654321
+
+Replacing `49987654321` with the phone number available to Sipgate. There is no validation if the number is valid.
+If the number is not valid, the default number defined for the feature is taken by Sipgate.
 
 ## Usage
 

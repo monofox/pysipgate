@@ -24,11 +24,11 @@ def connection_from_config(path):
     try:
         user = config.get('account', 'user')
         password = config.get('account', 'password')
+        sms_sender = config.get('fax', 'sender', fallback=None)
     except configparser.Error:
         raise SipgateException("Invalid configuration file")
 
-
-    return SipgateConnection(user, password)
+    return SipgateConnection(user, password, sms_sender)
 
 class SipgateException(Exception):
     """Exception thrown on errors in the Sipgate API"""
@@ -65,8 +65,9 @@ class SipgateConnection:
     """Represents a connection to the Sipgate API Server"""
 
     @exception_converter
-    def __init__(self, user, password):
+    def __init__(self, user, password, sms_sender=None):
         """Create a connection object for the given username"""
+        self._sms_sender = sms_sender
         url = API_URL.format(user=user, password=password)
 
         self.server = server = ServerProxy(url)
@@ -133,6 +134,8 @@ class SipgateConnection:
                 'TOS': 'text',
                 'Content': text,
                 }
+        if self._sms_sender:
+            data['LocalUri'] = 'sip:{}@sipgate.de'.format(sanitize_number(self._sms_sender))
 
         res = self.server.samurai.SessionInitiate(data)
 
