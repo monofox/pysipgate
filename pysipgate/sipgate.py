@@ -24,7 +24,7 @@ def connection_from_config(path):
     try:
         user = config.get('account', 'user')
         password = config.get('account', 'password')
-        sms_sender = config.get('fax', 'sender', fallback=None)
+        sms_sender = config.get('sms', 'sender', fallback=None)
     except configparser.Error:
         raise SipgateException("Invalid configuration file")
 
